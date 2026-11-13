@@ -1,0 +1,140 @@
+# config.yaml - Lead Intelligence System
+# Rubric, scoring settings and LLM settings. Never put API keys in this file;
+# read them from the LLM_API_KEY environment variable instead.
+
+product: >
+  Sales and customer data analytics platform: unifies CRM, transaction and
+  engagement data so mid-market sales and marketing teams can see which
+  customers and leads to prioritise.
+
+ideal_customer: >
+  Mid-market companies (about 50-5,000 employees) with large customer or lead
+  volumes and a sales or marketing team. Strongest in retail, tech, marketing,
+  media, gaming, finance and travel.
+
+# One fixed date for every file, so results are reproducible. Never use today's date.
+reference_date: "2024-01-20"
+
+# Factor weights. Must add up to 1.0.
+weights:
+  source: 0.30
+  size: 0.25
+  recency: 0.25
+  industry: 0.20
+
+# Points out of 10 for each source. Match is case-insensitive.
+source_scores:
+  "Referral": 10
+  "Inbound demo request": 9
+  "Sales call": 7
+  "Webinar attendee": 5
+  "Content download": 3
+  "LinkedIn outreach": 2
+  missing_or_unknown: 5      # neutral score, lower confidence, flag for review
+
+# Points out of 10 by company size (employees).
+size_scores:
+  bands:
+    - {min: 1,     max: 1,     score: 1}
+    - {min: 2,     max: 10,    score: 3}
+    - {min: 11,    max: 50,    score: 6}
+    - {min: 51,    max: 500,   score: 10}
+    - {min: 501,   max: 5000,  score: 8}
+    - {min: 5001,  max: 20000, score: 5}
+    - {min: 20001, max: null,  score: 2}
+  missing: 5                 # neutral score, lower confidence, flag for review
+
+# Points out of 10 by days since last interaction (reference_date minus date).
+recency_scores:
+  bands:
+    - {min: 0,   max: 14,   score: 10}
+    - {min: 15,  max: 30,   score: 9}
+    - {min: 31,  max: 60,   score: 7}
+    - {min: 61,  max: 90,   score: 6}
+    - {min: 91,  max: 180,  score: 4}
+    - {min: 181, max: 365,  score: 3}
+    - {min: 366, max: null, score: 1}
+  missing: 5                 # neutral score, lower confidence, flag for review
+  future_date:               # date after reference_date
+    days_used: 0             # treat as 0 days old, never a negative number
+    flag_for_review: true
+
+# Cell values treated as missing (case-insensitive), before any date or size math.
+missing_values: ["", "NA", "N/A", "NULL", "NONE", "NAN", "UNKNOWN", "-"]
+
+# Industry groups, scored by how likely the group is to need the product.
+# If an industry is in two groups (for example FinTech, EdTech), use the higher score.
+industry_groups:
+  tech:
+    score: 10
+    members: [SaaS, Software, Analytics, Cybersecurity, EdTech, FinTech]
+  retail:
+    score: 10
+    members: [Retail]
+  marketing_media:
+    score: 9
+    members: [Marketing, Media, Gaming]
+  finance:
+    score: 9
+    members: [Finance, FinTech, Insurance]
+  consumer_services:
+    score: 8
+    members: [Hospitality, Travel, Events]
+  education:
+    score: 7
+    members: [Education, EdTech]
+  real_estate_consulting:
+    score: 7
+    members: [Real Estate, Consulting]
+  manufacturing:
+    score: 6
+    members: [Manufacturing, Logistics, Supply Chain]
+  healthcare:
+    score: 6
+    members: [Healthcare, Pharmaceuticals]
+  energy:
+    score: 5
+    members: [Energy]
+  government_legal_agri:
+    score: 4
+    members: [Government, Legal, Agriculture]
+
+# Industries not listed above: the LLM maps them to the nearest group above.
+unlisted_industry:
+  clear_match:               # e.g. "Online Retail" -> retail
+    use_group_score: true    # full score of the matched group, no penalty
+    flag_for_review: false
+  uncertain_match:           # plausible group, but not obvious
+    penalty: 1               # subtract this from the matched group's score
+    confidence: low
+    flag_for_review: true
+  no_match:                  # nothing fits
+    score: 5                 # neutral
+    confidence: low
+    flag_for_review: true
+  record_mapping_in_reasoning: true
+
+# Decision thresholds on the final 1-10 score.
+# STARTING VALUES: set them after scoring the training leads (see README).
+decision:
+  qualified_min: 8.0         # at or above: qualified
+  review_min: 6.5            # from here up to qualified_min: review; below: rejected
+  low_confidence_to_review: true
+  missing_key_field_to_review: true
+
+# Priority rank for qualified leads: highest score first, ties broken by recency.
+priority:
+  rank_by: [score, recency]
+
+# First-message settings.
+messages:
+  max_words: 80
+  variants: [referral_warm, inbound_direct, outreach_soft]
+  tone: professional and concise
+
+# LLM call settings.
+llm:
+  batch_size: 10             # leads per API call
+  temperature: 0.2
+  max_retries: 3
+  backoff_seconds: 2
