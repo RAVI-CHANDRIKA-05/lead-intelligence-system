@@ -67,7 +67,7 @@ missing_values: ["", "NA", "N/A", "NULL", "NONE", "NAN", "UNKNOWN", "-"]
 industry_groups:
   tech:
     score: 10
-    members: [SaaS, Software, Analytics, Cybersecurity, AI/ML, Cloud, IT Services]
+    members: [SaaS, Software, Analytics, Cybersecurity, EdTech, FinTech, AI/ML, Cloud, IT Services]
   retail:
     score: 10
     members: [Retail, E-commerce, Consumer Goods]
@@ -156,6 +156,17 @@ messages:
     - typically
     - tend to
     - solve
+    - recently          # no claims about when the product was launched or used
+    - helped            # no claims that it has helped other companies
+    - assisted
+    - supported
+    - launched
+    - debuted
+    - deployed
+    - introduced
+    - developed
+    - built
+    - empower
   default_variant: inbound_direct
   variant_by_source:         # which message style each lead source gets
     "Referral": referral_warm
@@ -184,7 +195,7 @@ messages:
   default_opening: "Thank you for your interest in our {product}."
   subjects:
     "Referral": "Introducing our {product} to {company}"
-    "Inbound demo request": "Thank you for requesting a demo of our {product}"
+    "Inbound demo request": "Connecting regarding a demo of our {product}"
     "Sales call": "Following up on our call about our {product}"
     "Webinar attendee": "Following up on our webinar and our {product}"
     "Content download": "Thank you for your interest in our {product}"

@@ -73,6 +73,7 @@ def load_config(path):
             key = member.lower()
             industry_map[key] = max(industry_map.get(key, 0), group["score"])
     cfg["_industry_map"] = industry_map
+    cfg["_mapping_cache"] = {}   # unlisted industry text -> (group, match), first answer wins
     return cfg
 
 
@@ -223,9 +224,13 @@ def decide(final, flags, cfg):
     return "rejected"
 
 
+def days_text(days):
+    return "unknown" if days is None else (f"{days} day" if days == 1 else f"{days} days")
+
+
 def breakdown_text(r):
     """Plain-language points breakdown, built in code so it always matches the score."""
-    days = "unknown" if r["days"] is None else f"{r['days']} days"
+    days = days_text(r["days"])
     return (f"source {r['src']}/10 ({r['source'] or 'missing'}); "
             f"size {r['siz']}/10 ({r['size'] or 'missing'} employees); "
             f"recency {r['rec']}/10 ({days}); "
@@ -237,13 +242,15 @@ def decision_text(r, cfg):
     """Plain-language 'why this decision', built in code so it always matches the score."""
     dec = cfg["decision"]
     factors = [("source", r["src"], r["source"]), ("size", r["siz"], r["size"]),
-               ("recency", r["rec"], f"{r['days']} days" if r["days"] is not None else ""),
+               ("recency", r["rec"], days_text(r["days"]) if r["days"] is not None else ""),
                ("industry", r["ind"], r["industry"])]
     top = max(p for _, p, _ in factors)
     low = min(p for _, p, _ in factors)
     strongest = ", ".join(f"{n} {p}/10" for n, p, _ in factors if p == top)
     parts = []
-    if top != low:
+    if top != low and low >= 8:
+        parts.append("All four factors score 8/10 or higher.")
+    elif top != low:
         weakest = ", ".join(f"{n} {p}/10" + (f" ({d})" if d else "")
                             for n, p, d in factors if p == low)
         parts.append(f"Strongest: {strongest}. Weakest: {weakest}.")
@@ -418,7 +425,18 @@ def apply_assessment(r, a, cfg):
     if group not in groups:
         group, match = "none", "none"   # the model named a group we do not have
 
-    r["llm_reasoning"] = str(a.get("reasoning", "")).strip()[:400] or None
+    reasoning = str(a.get("reasoning", "")).strip()[:400] or None
+    if r["unlisted"]:
+        # The same industry text must always map to the same group (consistency).
+        key = r["industry"].strip().lower()
+        cache = cfg["_mapping_cache"]
+        if key in cache:
+            if cache[key][0] != group:
+                reasoning = None   # this answer named a different group; use the points text
+            group, match = cache[key]
+        else:
+            cache[key] = (group, match)
+    r["llm_reasoning"] = reasoning
     r["llm_confidence"] = confidence
     r["industry_group"] = None if group == "none" else group
     r["llm_status"] = "ok"
@@ -627,26 +645,32 @@ def basic_reason(r):
     return None
 
 
-def validate_message(middle, r, cfg):
+def validate_message(middle, r, cfg, other_companies=()):
     """Returns (ok, reason). Checks the model's text before it is used."""
     if not middle:
         return False, "empty message"
     if PLACEHOLDER_RE.search(middle):
         return False, "contains a placeholder or markup"
+    low = middle.lower()
     for phrase in cfg["messages"].get("banned_phrases", []):
-        if phrase.lower() in middle.lower():
+        if phrase.lower() in low:
             return False, f"contains banned phrase '{phrase}'"
-    shown = (build_body(r, middle, cfg) + " " + subject_line(r, cfg)).lower()
-    tokens = [t for t in re.findall(r"[a-z0-9]+", r["company"].lower()) if len(t) >= 4]
+    own = (r["company"] or "").strip().lower()
+    shown = (opening_sentence(r, cfg) + " " + middle).lower()
+    tokens = [t for t in re.findall(r"[a-z0-9]+", own) if len(t) >= 4]
     if tokens and not any(t in shown for t in tokens):
         return False, "does not mention the company"
+    if own:
+        for other in other_companies:
+            if other and other != own and other not in own and own not in other and other in low:
+                return False, f"mentions another lead's company ('{other}')"
     words = len(compose_message(r, build_body(r, middle, cfg), cfg).split())
     if words > cfg["messages"]["max_words"]:
         return False, f"too long ({words} words)"
     return True, None
 
 
-def build_message_prompt(batch, cfg):
+def build_message_prompt(batch, cfg, fixes=None):
     m, sender = cfg["messages"], cfg["sender"]
     items = [{
         "id": r["id"],
@@ -659,6 +683,9 @@ def build_message_prompt(batch, cfg):
         "style_guidance": " ".join(m["variant_guidance"][r["variant"]].split()),
         "max_words_for_your_text": words_available(r, cfg),
     } for r in batch]
+    for it in items:
+        if fixes and it["id"] in fixes:
+            it["previous_attempt_rejected_because"] = fixes[it["id"]]
     return (
         f"You write short first-contact sales emails for {sender['company']}, sent by "
         f"{sender['name']}.\n"
@@ -684,7 +711,14 @@ def build_message_prompt(batch, cfg):
         "webinar titles, statistics, customers, pricing or product features beyond the value "
         "proposition. Do not claim to know their workflow, team or challenges, and do not "
         "propose a specific day or time.\n"
-        "- Say \"recently\" only if days_since_last_interaction is 30 or less.\n"
+        "- Do not use the word \"recently\". Describe what the product does in the present "
+        "tense. Never say it has helped, assisted or supported other companies, or that it was "
+        "launched, built, developed, introduced or deployed.\n"
+        "- Use simple, direct sentences, for example: \"It can help X's sales and marketing "
+        "teams see which leads to prioritise.\" Vary the wording from lead to lead, and avoid "
+        "\"empower\", \"enable\" and \"allow\".\n"
+        "- Mention only the lead's own company, never any other company from this list.\n"
+        "- If a lead has previous_attempt_rejected_because, write a new text that fixes it.\n"
         "- Make each text read differently. No two texts in this batch may start with the same "
         "first three words, and no sentence may appear in more than one text.\n"
         "- Write like a person: simple words, no flattery such as \"pleasure\" or \"delighted\".\n"
@@ -719,11 +753,12 @@ def set_message(r, middle, written_by, reason, cfg):
 
 
 def generate_messages(results, cfg, mock=None, use_llm=True):
-    """Write a message for every qualified lead. Returns run statistics."""
+    """Write a message for every qualified lead. Returns run statistics.
+    Texts that fail the checks are re-requested once; if they still fail, the template is used."""
     qualified = [r for r in results if r["decision"] == "qualified"]
     stats = {"qualified_leads": len(qualified), "batches": 0, "failed_batches": 0,
              "api_attempts": 0, "written_by_llm": 0, "written_by_template": 0,
-             "basic_messages": 0}
+             "basic_messages": 0, "rejected_first_try": 0, "fixed_on_retry": 0}
     for r in qualified:
         r["variant"] = pick_variant(r, cfg)
 
@@ -748,48 +783,82 @@ def generate_messages(results, cfg, mock=None, use_llm=True):
         return stats
 
     size = max(1, int(cfg["llm"].get("batch_size", 10)))
-    for start in range(0, len(qualified), size):
-        batch = qualified[start:start + size]
+    companies = {(x["company"] or "").strip().lower() for x in results
+                 if (x["company"] or "").strip()}
+
+    def ask(batch, fixes=None, label="Message batch"):
         ids = [r["id"] for r in batch]
         stats["batches"] += 1
-        print(f"Message batch {stats['batches']}: {len(batch)} qualified leads")
+        print(f"{label} {stats['batches']}: {len(batch)} leads")
 
-        def call(prompt, c, batch=batch):
+        def call(prompt, c):
             stats["api_attempts"] += 1
             return (mock_message_call(batch, mock) if mock else
                     http_call(prompt, c, temperature=c["llm"].get("message_temperature")))
 
+        return ask_llm(build_message_prompt(batch, cfg, fixes), cfg, ids, call,
+                       sleep=(lambda s: None) if mock else time.sleep)
+
+    def pause(more):
+        if not mock and more:
+            time.sleep(cfg["llm"].get("pause_between_batches_seconds", 1))
+
+    rejected = []   # (lead, reason) for texts that failed the checks
+    for start in range(0, len(qualified), size):
+        batch = qualified[start:start + size]
         try:
-            answers = ask_llm(build_message_prompt(batch, cfg), cfg, ids, call,
-                              sleep=(lambda s: None) if mock else time.sleep)
+            answers = ask(batch)
         except LlmError as exc:
             stats["failed_batches"] += 1
             print(f"  message batch failed, using templates: {exc}", file=sys.stderr)
             for r in batch:
                 use_template(r, f"LLM unavailable: {exc}"[:150])
             continue
-
         for r in batch:
-            a = answers.get(r["id"]) or {}
-            middle = clean_body(a.get("body", ""))
-            ok, reason = validate_message(middle, r, cfg)
+            middle = clean_body((answers.get(r["id"]) or {}).get("body", ""))
+            ok, reason = validate_message(middle, r, cfg, companies)
             if ok:
                 set_message(r, middle, "llm", None, cfg)
                 stats["written_by_llm"] += 1
             else:
+                rejected.append((r, reason))
+        pause(start + size < len(qualified))
+
+    # One retry: tell the model why each text was rejected.
+    stats["rejected_first_try"] = len(rejected)
+    for start in range(0, len(rejected), size):
+        chunk = rejected[start:start + size]
+        batch = [r for r, _ in chunk]
+        fixes = {r["id"]: reason for r, reason in chunk}
+        try:
+            answers = ask(batch, fixes, label="Retry batch")
+        except LlmError as exc:
+            stats["failed_batches"] += 1
+            print(f"  retry failed, using templates: {exc}", file=sys.stderr)
+            for r, reason in chunk:
                 use_template(r, f"LLM message rejected: {reason}")
-        if not mock and start + size < len(qualified):
-            time.sleep(cfg["llm"].get("pause_between_batches_seconds", 1))
+            continue
+        for r, reason in chunk:
+            middle = clean_body((answers.get(r["id"]) or {}).get("body", ""))
+            ok, why = validate_message(middle, r, cfg, companies)
+            if ok:
+                set_message(r, middle, "llm", None, cfg)
+                stats["written_by_llm"] += 1
+                stats["fixed_on_retry"] += 1
+            else:
+                use_template(r, f"LLM message rejected twice: {why}")
+        pause(start + size < len(rejected))
     return stats
 
 
 def pick_samples(results, limit=5):
-    """3-5 sample messages: one of each style first, then the best-ranked others."""
+    """3-5 sample messages: one per style and source first, then the best-ranked others."""
     with_msg = [r for r in results if r.get("message")]
     picked, seen = [], set()
     for r in with_msg:
-        if r["message"]["variant"] not in seen:
-            seen.add(r["message"]["variant"])
+        key = (r["message"]["variant"], r["source"].lower())
+        if key not in seen and r["message"]["written_by"] == "llm":
+            seen.add(key)
             picked.append(r)
     for r in with_msg:
         if len(picked) >= limit:
@@ -947,7 +1016,8 @@ def print_summary(report):
         print(f"Messages: {m['qualified_leads']} qualified leads, {m['batches']} batches, "
               f"{m['api_attempts']} API attempts, {m['failed_batches']} failed batches; "
               f"written by LLM: {m['written_by_llm']}, by template: {m['written_by_template']} "
-              f"(basic messages: {m['basic_messages']})")
+              f"(basic messages: {m['basic_messages']}); rejected first try: "
+              f"{m['rejected_first_try']}, fixed on retry: {m['fixed_on_retry']}")
 
 
 def print_samples(report):
