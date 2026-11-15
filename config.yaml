@@ -67,19 +67,19 @@ missing_values: ["", "NA", "N/A", "NULL", "NONE", "NAN", "UNKNOWN", "-"]
 industry_groups:
   tech:
     score: 10
-    members: [SaaS, Software, Analytics, Cybersecurity, EdTech, FinTech]
+    members: [SaaS, Software, Analytics, Cybersecurity, EdTech, FinTech, AI/ML, Cloud, IT Services]
   retail:
     score: 10
-    members: [Retail]
+    members: [Retail, E-commerce, Consumer Goods]
   marketing_media:
     score: 9
-    members: [Marketing, Media, Gaming]
+    members: [Marketing, Media, Gaming, entertainment]
   finance:
     score: 9
-    members: [Finance, FinTech, Insurance]
+    members: [Finance, FinTech, Insurance, Cryptocurrency, InsurTech]
   consumer_services:
     score: 8
-    members: [Hospitality, Travel, Events]
+    members: [Hospitality, Travel, Events, Services, Sports, Entertainment, HR Tech, Telecom]
   education:
     score: 7
     members: [Education, EdTech]
@@ -88,10 +88,10 @@ industry_groups:
     members: [Real Estate, Consulting]
   manufacturing:
     score: 6
-    members: [Manufacturing, Logistics, Supply Chain]
+    members: [Manufacturing, Logistics, Supply Chain, Automotive]
   healthcare:
     score: 6
-    members: [Healthcare, Pharmaceuticals]
+    members: [Healthcare, Pharmaceuticals, Biotech, HealthTech]
   energy:
     score: 5
     members: [Energy]
@@ -115,7 +115,7 @@ unlisted_industry:
   record_mapping_in_reasoning: true
 
 # Decision thresholds on the final 1-10 score.
-# STARTING VALUES: set them after scoring the training leads (see README).
+# Set after scoring the 29 training leads (see README).
 decision:
   qualified_min: 8.0         # at or above: qualified
   review_min: 6.5            # from here up to qualified_min: review; below: rejected
@@ -126,15 +126,69 @@ decision:
 priority:
   rank_by: [score, recency]
 
-# First-message settings.
-messages:
-  max_words: 80
-  variants: [referral_warm, inbound_direct, outreach_soft]
-  tone: professional and concise
+# Who the messages come from.
+sender:
+  name: Chandrika
+  company: Innova Solutions
 
-# LLM call settings.
+# First-message settings. Messages are written for qualified leads only.
+# Each message = greeting + opening sentence (from this file) + body (LLM) + sign-off.
+messages:
+  max_words: 80              # whole message: greeting, opening, body and sign-off
+  tone: professional and concise
+  product_name: analytics product   # used as {product} below
+  call_to_action: "Would you be open to a 15-minute call this week?"
+  call_to_action_soft: "Would it be useful if I shared more details?"
+  value_proposition: >
+    We help sales and marketing teams see which customers and leads to
+    prioritise by unifying CRM, transaction and engagement data.
+  product_link: ""           # optional: your product page URL. Used in LinkedIn (outreach_soft) messages only.
+  link_sentence: "You can find an overview here: {link}"
+  default_variant: inbound_direct
+  variant_by_source:         # which message style each lead source gets
+    "Referral": referral_warm
+    "Inbound demo request": inbound_direct
+    "Sales call": inbound_direct
+    "Webinar attendee": inbound_direct
+    "Content download": inbound_direct
+    "LinkedIn outreach": outreach_soft
+  variant_guidance:
+    referral_warm: >
+      Warm and personal. Close with a question about a short call.
+    inbound_direct: >
+      Friendly and direct. Close with a question about a short call.
+    outreach_soft: >
+      Low pressure and curious. We are reaching out first, so do not assume they are
+      interested. Close with a question offering to send more details.
+  # The opening sentence is fixed by source, so the message always starts correctly.
+  # {product} and {company} are filled in automatically.
+  opening_sentences:
+    "Referral": "You were referred to us by our mutual connection, so I wanted to reach out and introduce our {product}."
+    "Inbound demo request": "Thank you for requesting a demo of our {product}."
+    "Sales call": "Thank you for speaking with our team about our {product}."
+    "Webinar attendee": "Thank you for attending our webinar and showing interest in our {product}."
+    "Content download": "Thank you for downloading our content and showing interest in our {product}."
+    "LinkedIn outreach": "I'm reaching out because {company} looks like a strong fit for our {product}."
+  default_opening: "Thank you for your interest in our {product}."
+  subjects:
+    "Referral": "Introducing our {product} to {company}"
+    "Inbound demo request": "Thank you for requesting a demo of our {product}"
+    "Sales call": "Following up on our call about our {product}"
+    "Webinar attendee": "Following up on our webinar and our {product}"
+    "Content download": "Thank you for your interest in our {product}"
+    "LinkedIn outreach": "A quick introduction to our {product} for {company}"
+  default_subject: "Our {product} for {company}"
+
+# LLM call settings (Gemini API via Google AI Studio).
+# The API key is read from the LLM_API_KEY environment variable or a .env file.
 llm:
+  provider: gemini
+  model: gemini-3.5-flash-lite   # run `python main.py --list-models` if this name stops working
+  api_base: https://generativelanguage.googleapis.com/v1beta
   batch_size: 10             # leads per API call
-  temperature: 0.2
-  max_retries: 3
-  backoff_seconds: 2
+  temperature: 0.2           # scoring: low, so results stay consistent
+  message_temperature: 0.7   # messages: higher, so they read differently
+  max_retries: 5             # retries after the first attempt (rate limits, timeouts, bad output)
+  backoff_seconds: 5         # wait doubles each retry: 5, 10, 20, 40, 80
+  timeout_seconds: 90
+  pause_between_batches_seconds: 3
