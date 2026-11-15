@@ -188,6 +188,7 @@ def score_lead(lead, cfg, lead_id):
         "llm_reasoning": None,
         "llm_confidence": None,
         "llm_status": "not_used",
+        "llm_error": None,
     }
 
 
@@ -196,14 +197,23 @@ def score_lead(lead, cfg, lead_id):
 # --------------------------------------------------------------------------
 LOW_CONF_FLAG = "low LLM confidence"
 
+# Flags that only say "we are not sure about the industry". They are notes: the lead is
+# still decided by its score, and gets a basic message if it qualifies.
+SOFT_INDUSTRY_PREFIXES = ("industry '", "uncertain industry match", "unlisted industry",
+                          "missing industry")
+
+
+def is_soft_industry_flag(flag):
+    return flag.startswith(SOFT_INDUSTRY_PREFIXES)
+
 
 def decide(final, flags, cfg):
     """Apply thresholds.
-    Data problems (missing fields, uncertain industry mapping, LLM failure) send a lead
-    to review. Low LLM confidence only stops a lead from being promoted to qualified:
-    it never pulls a clear reject up into review."""
+    Data problems (missing size, source or date, LLM failure) send a lead to review.
+    Low LLM confidence only stops a lead from being promoted to qualified; it never pulls
+    a clear reject up into review. An unsure industry is only a note: the score decides."""
     dec = cfg["decision"]
-    hard_flags = [f for f in flags if f != LOW_CONF_FLAG]
+    hard_flags = [f for f in flags if f != LOW_CONF_FLAG and not is_soft_industry_flag(f)]
     if hard_flags and dec.get("missing_key_field_to_review", True):
         return "review"
     if final >= dec["qualified_min"]:
@@ -238,14 +248,18 @@ def decision_text(r, cfg):
                             for n, p, d in factors if p == low)
         parts.append(f"Strongest: {strongest}. Weakest: {weakest}.")
     label = r["decision"].capitalize()
-    if r["flag_list"]:
-        why = "; ".join(r["flag_list"])
+    reasons = [f for f in r["flag_list"] if not is_soft_industry_flag(f)]
+    notes = [f for f in r["flag_list"] if is_soft_industry_flag(f)]
+    if r["decision"] == "review" and reasons:
+        why = "; ".join(reasons)
     elif r["decision"] == "qualified":
         why = f"at or above the {dec['qualified_min']} qualified cut-off"
     elif r["decision"] == "review":
         why = f"below the {dec['qualified_min']} qualified cut-off"
     else:
         why = f"below the {dec['review_min']} review cut-off"
+    if notes:
+        why += "; note: " + "; ".join(notes)
     parts.append(f"{label} ({r['final']}/10): {why}.")
     return " ".join(parts)
 
@@ -269,16 +283,17 @@ def finalize(r, cfg):
 class LlmError(Exception):
     """An LLM call failed. retryable tells the caller whether to try again."""
 
-    def __init__(self, message, retryable):
+    def __init__(self, message, retryable, fatal=False):
         super().__init__(message)
         self.retryable = retryable
+        self.fatal = fatal  # a setup problem (key, model name): retrying or falling back cannot help
 
 
 def http_call(prompt, cfg, temperature=None):
     """Send one prompt to the Gemini API and return the response text."""
     key = os.environ.get("LLM_API_KEY")
     if not key:
-        raise LlmError("LLM_API_KEY is not set", retryable=False)
+        raise LlmError("LLM_API_KEY is not set", retryable=False, fatal=True)
     llm = cfg["llm"]
     url = f"{llm['api_base']}/models/{llm['model']}:generateContent"
     body = {
@@ -301,7 +316,8 @@ def http_call(prompt, cfg, temperature=None):
         detail = exc.read().decode("utf-8", errors="replace")[:200]
         # Rate limits, timeouts and server errors are worth retrying.
         retryable = exc.code in (408, 429, 500, 502, 503, 504)
-        raise LlmError(f"HTTP {exc.code}: {detail}", retryable)
+        fatal = exc.code in (400, 401, 403, 404)   # bad request, key or model name
+        raise LlmError(f"HTTP {exc.code}: {detail}", retryable, fatal)
     except (urllib.error.URLError, socket.timeout, TimeoutError) as exc:
         raise LlmError(f"network problem: {exc}", retryable=True)
     try:
@@ -419,7 +435,9 @@ def apply_assessment(r, a, cfg):
             r["ind"] = max(0, groups[group]["score"] - rule["uncertain_match"]["penalty"])
             r["flag_list"].append(f"uncertain industry match to {group}")
 
-    if confidence == "low" and cfg["decision"].get("low_confidence_to_review", True):
+    industry_unsure = any(is_soft_industry_flag(f) for f in r["flag_list"])
+    if (confidence == "low" and not industry_unsure
+            and cfg["decision"].get("low_confidence_to_review", True)):
         r["flag_list"].append(LOW_CONF_FLAG)
     return True
 
@@ -462,10 +480,15 @@ def run_llm_stage(results, cfg, mock=None):
             answers = ask_llm(build_prompt(batch, cfg), cfg, ids, call,
                               sleep=(lambda s: None) if mock else time.sleep)
         except LlmError as exc:
+            if exc.fatal:
+                sys.exit(f"\nStopping: the LLM rejected the request, which usually means a wrong "
+                         f"key or model name.\n  {exc}\nCheck LLM_API_KEY and 'model' in "
+                         f"config.yaml (python main.py --list-models), or run with --no-llm.")
             stats["failed_batches"] += 1
             print(f"  batch failed, using rule-based scores only: {exc}", file=sys.stderr)
             for r in batch:
                 r["llm_status"] = "failed"
+                r["llm_error"] = str(exc)[:300]
                 r["flag_list"].append("LLM unavailable: rule-based score only")
             continue
 
@@ -515,7 +538,10 @@ def opening_sentence(r, cfg):
 
 def subject_line(r, cfg):
     m = cfg["messages"]
-    return fill(lookup(m["subjects"], r["source"], m["default_subject"]), r, cfg)
+    template = lookup(m["subjects"], r["source"], m["default_subject"])
+    if "{company}" in template and not (r["company"] or "").strip():
+        template = m["subject_no_company"]
+    return fill(template, r, cfg)
 
 
 def link_sentence(r, cfg):
@@ -526,9 +552,15 @@ def link_sentence(r, cfg):
     return ""
 
 
+NAME_RE = re.compile(r"^[A-Za-z][A-Za-z'.\-]*$")
+
+
 def greeting(r):
-    parts = r["contact_name"].split()
-    return f"Hi {parts[0]}," if parts else "Hi there,"
+    """First name if it looks like a real name; otherwise 'Hi there,'
+    (test labels such as 'Test_RecentEngagement' are not names)."""
+    titles = {"dr", "mr", "mrs", "ms", "miss", "prof"}
+    parts = [t for t in r["contact_name"].split() if t.lower().rstrip(".") not in titles]
+    return f"Hi {parts[0]}," if parts and NAME_RE.match(parts[0]) else "Hi there,"
 
 
 def closing(cfg):
@@ -566,14 +598,33 @@ def clean_body(text):
     return " ".join(ln for ln in lines if ln).strip()
 
 
+def industry_is_sure(r):
+    return bool(r["industry"]) and not any(is_soft_industry_flag(f) for f in r["flag_list"])
+
+
 def template_middle(r, cfg):
-    """Fallback middle part built from CSV facts only; used when the LLM is unavailable."""
+    """Basic message body built from CSV facts only. Used when the LLM is unavailable,
+    when there is no company name, or when the industry is not confirmed."""
     m = cfg["messages"]
-    company = r["company"] or "your company"
-    industry = r["industry"] or "your industry"
+    company = (r["company"] or "").strip()
     value = " ".join(m["value_proposition"].split())
+    if company and industry_is_sure(r) and r["industry"].lower() not in company.lower():
+        helps = f"We believe it can help {company} in {r['industry']} do the same."
+    elif company:
+        helps = f"We believe it can help {company} do the same."
+    else:
+        helps = "We believe it can help your team do the same."
     cta = m["call_to_action_soft"] if r["variant"] == "outreach_soft" else m["call_to_action"]
-    return f"{value} It looks like a good fit for {company} in {industry}. {cta}"
+    return f"{value} {helps} {cta}"
+
+
+def basic_reason(r):
+    """Why a qualified lead gets the basic message instead of a personalised one."""
+    if not (r["company"] or "").strip():
+        return "basic message: no company name"
+    if any(is_soft_industry_flag(f) for f in r["flag_list"]):
+        return "basic message: industry not confirmed"
+    return None
 
 
 def validate_message(middle, r, cfg):
@@ -582,6 +633,9 @@ def validate_message(middle, r, cfg):
         return False, "empty message"
     if PLACEHOLDER_RE.search(middle):
         return False, "contains a placeholder or markup"
+    for phrase in cfg["messages"].get("banned_phrases", []):
+        if phrase.lower() in middle.lower():
+            return False, f"contains banned phrase '{phrase}'"
     shown = (build_body(r, middle, cfg) + " " + subject_line(r, cfg)).lower()
     tokens = [t for t in re.findall(r"[a-z0-9]+", r["company"].lower()) if len(t) >= 4]
     if tokens and not any(t in shown for t in tokens):
@@ -618,8 +672,14 @@ def build_message_prompt(batch, cfg):
         "- Do NOT write a greeting, a subject or a sign-off; they are added automatically.\n"
         "- Stay within max_words_for_your_text. Plain text, one short paragraph.\n"
         "- Explain the value proposition in your own words, linked to the lead's industry, "
-        "and name the lead's company.\n"
+        "and say how our product can help the lead's company (for example \"can help X see "
+        "which customers to prioritise\"). Name the company.\n"
         "- End with one clear closing question, following the style_guidance.\n"
+        "- The product is for sales and marketing teams. Always describe the benefit for the "
+        "lead's sales and marketing teams, whatever the lead's industry.\n"
+        "- Never assume or describe problems the lead has. No \"struggle\", \"challenges\", "
+        "\"pain points\", and no \"often\" or \"typically\" claims about them. Say only how "
+        "our product can help.\n"
         "- Use ONLY the supplied fields. Do not invent who referred them, meeting details, "
         "webinar titles, statistics, customers, pricing or product features beyond the value "
         "proposition. Do not claim to know their workflow, team or challenges, and do not "
@@ -662,13 +722,25 @@ def generate_messages(results, cfg, mock=None, use_llm=True):
     """Write a message for every qualified lead. Returns run statistics."""
     qualified = [r for r in results if r["decision"] == "qualified"]
     stats = {"qualified_leads": len(qualified), "batches": 0, "failed_batches": 0,
-             "api_attempts": 0, "written_by_llm": 0, "written_by_template": 0}
+             "api_attempts": 0, "written_by_llm": 0, "written_by_template": 0,
+             "basic_messages": 0}
     for r in qualified:
         r["variant"] = pick_variant(r, cfg)
 
     def use_template(r, reason):
         set_message(r, template_middle(r, cfg), "template", reason, cfg)
         stats["written_by_template"] += 1
+
+    # Qualified leads with no company name or an unsure industry get the basic message.
+    personal = []
+    for r in qualified:
+        reason = basic_reason(r)
+        if reason:
+            use_template(r, reason)
+            stats["basic_messages"] += 1
+        else:
+            personal.append(r)
+    qualified = personal
 
     if not use_llm or not qualified:
         for r in qualified:
@@ -783,6 +855,7 @@ def lead_record(r):
         "industry_group": r["industry_group"],
         "flags": r["flag_list"],
         "llm_status": r["llm_status"],
+        "llm_error": r.get("llm_error"),
         "message": r.get("message"),
     }
 
@@ -873,7 +946,8 @@ def print_summary(report):
     if m:
         print(f"Messages: {m['qualified_leads']} qualified leads, {m['batches']} batches, "
               f"{m['api_attempts']} API attempts, {m['failed_batches']} failed batches; "
-              f"written by LLM: {m['written_by_llm']}, by template: {m['written_by_template']}")
+              f"written by LLM: {m['written_by_llm']}, by template: {m['written_by_template']} "
+              f"(basic messages: {m['basic_messages']})")
 
 
 def print_samples(report):
@@ -961,7 +1035,10 @@ def main():
     leads = load_leads(args.input)
     if not leads:
         sys.exit("No leads found in the input file.")
+    mode = "off" if args.no_llm else (f"MOCK ({args.mock_llm})" if args.mock_llm
+                                      else cfg["llm"]["model"])
     print(f"Input: {args.input} | leads: {len(leads)} | reference date: {cfg['_ref_date']}")
+    print(f"LLM: {mode}")
 
     results = []
     for i, lead in enumerate(leads, start=1):

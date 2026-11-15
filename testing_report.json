@@ -1,6 +1,6 @@
 {
   "run": {
-    "generated_at": "2026-11-15T08:15:17",
+    "generated_at": "2026-11-15T11:30:02",
     "input_file": "leads_testing.csv",
     "reference_date": "2024-01-20",
     "weights": {
@@ -22,12 +22,13 @@
         "unusable_answers": 0
       },
       "messages": {
-        "qualified_leads": 5,
+        "qualified_leads": 6,
         "batches": 1,
         "failed_batches": 0,
         "api_attempts": 1,
-        "written_by_llm": 5,
-        "written_by_template": 0
+        "written_by_llm": 3,
+        "written_by_template": 3,
+        "basic_messages": 2
       }
     },
     "sender": {
@@ -37,16 +38,17 @@
   },
   "summary": {
     "total_processed": 20,
-    "qualified": 5,
-    "review": 12,
+    "qualified": 6,
+    "review": 11,
     "rejected": 3,
-    "qualified_pct": 25.0,
-    "review_pct": 60.0,
+    "qualified_pct": 30.0,
+    "review_pct": 55.0,
     "rejected_pct": 15.0,
-    "leads_with_flags": 6,
-    "messages_written": 5,
+    "leads_with_flags": 7,
+    "messages_written": 6,
     "messages_by_style": {
-      "inbound_direct": 5
+      "inbound_direct": 5,
+      "referral_warm": 1
     },
     "common_rejection_reasons": [
       {
@@ -84,16 +86,17 @@
       },
       "score": 9.7,
       "decision": "qualified",
-      "reasoning": "With 200 employees and a SaaS focus, this company matches both our ideal mid-market size and core tech sector. Strongest: size 10/10, recency 10/10, industry 10/10. Weakest: source 9/10 (Inbound demo request). Qualified (9.7/10): at or above the 8.0 qualified cut-off.",
+      "reasoning": "Operating in SaaS with 200 employees, this company matches both our ideal industry and mid-market size targets. Strongest: size 10/10, recency 10/10, industry 10/10. Weakest: source 9/10 (Inbound demo request). Qualified (9.7/10): at or above the 8.0 qualified cut-off.",
       "score_breakdown": "source 9/10 (Inbound demo request); size 10/10 (200 employees); recency 10/10 (0 days); industry 10/10 (SaaS); weighted score 9.7/10",
       "confidence": "high",
       "industry_group": "tech",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": {
         "variant": "inbound_direct",
         "subject": "Thank you for requesting a demo of our analytics product",
-        "body": "Hi Test_RecentEngagement,\n\nThank you for requesting a demo of our analytics product. At Hot Lead Corp, your sales and marketing groups can easily identify top accounts by bringing CRM, transaction, and engagement metrics into one view. Would you be open to a brief call this week to walk through how this works?\n\nBest,\nChandrika\nInnova Solutions",
+        "body": "Hi there,\n\nThank you for requesting a demo of our analytics product. Innova Solutions can help Hot Lead Corp sales and marketing teams see which accounts to prioritize by bringing CRM, transaction, and engagement data into one view. Would you be open to a brief call this week to review the setup?\n\nBest,\nChandrika\nInnova Solutions",
         "word_count": 56,
         "written_by": "llm",
         "fallback_reason": null
@@ -115,17 +118,18 @@
       },
       "score": 9.7,
       "decision": "qualified",
-      "reasoning": "With 120 employees in the retail sector, this company matches both the mid-market size and core industry profile. Strongest: size 10/10, recency 10/10, industry 10/10. Weakest: source 9/10 (Inbound demo request). Qualified (9.7/10): at or above the 8.0 qualified cut-off.",
+      "reasoning": "As a retail company with 120 employees, it fits both the ideal industry and mid-market size profile. Strongest: size 10/10, recency 10/10, industry 10/10. Weakest: source 9/10 (Inbound demo request). Qualified (9.7/10): at or above the 8.0 qualified cut-off.",
       "score_breakdown": "source 9/10 (Inbound demo request); size 10/10 (120 employees); recency 10/10 (1 days); industry 10/10 (Retail); weighted score 9.7/10",
       "confidence": "high",
       "industry_group": "retail",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": {
         "variant": "inbound_direct",
         "subject": "Thank you for requesting a demo of our analytics product",
-        "body": "Hi Test_SMBAverage,\n\nThank you for requesting a demo of our analytics product. Retail teams at Average SMB Co often struggle to spot the best buyers, but combining your CRM, transaction, and engagement records solves this by highlighting high-value targets. Do you have time for a short call to review the platform?\n\nBest,\nChandrika\nInnova Solutions",
-        "word_count": 55,
+        "body": "Hi there,\n\nThank you for requesting a demo of our analytics product. Our platform combines CRM, transaction, and engagement data so Average SMB Co sales and marketing teams can easily identify their highest-value shoppers. Are you available for a quick conversation tomorrow?\n\nBest,\nChandrika\nInnova Solutions",
+        "word_count": 46,
         "written_by": "llm",
         "fallback_reason": null
       }
@@ -146,19 +150,20 @@
       },
       "score": 9.5,
       "decision": "qualified",
-      "reasoning": "With 500 employees and a finance focus, this company hits our ideal mid-market size and strong vertical. Strongest: size 10/10, recency 10/10. Weakest: source 9/10 (Inbound demo request), industry 9/10 (Finance). Qualified (9.5/10): at or above the 8.0 qualified cut-off.",
+      "reasoning": "Finance is a target sector, and its 500 employees fit the ideal mid-market company size range. Strongest: size 10/10, recency 10/10. Weakest: source 9/10 (Inbound demo request), industry 9/10 (Finance). Qualified (9.5/10): at or above the 8.0 qualified cut-off.",
       "score_breakdown": "source 9/10 (Inbound demo request); size 10/10 (500 employees); recency 10/10 (0 days); industry 9/10 (Finance); weighted score 9.5/10",
       "confidence": "high",
       "industry_group": "finance",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": {
         "variant": "inbound_direct",
         "subject": "Thank you for requesting a demo of our analytics product",
-        "body": "Hi Test_MultipleInteractions,\n\nThank you for requesting a demo of our analytics product. For a finance organization like Active Company, connecting CRM, transaction, and engagement data helps commercial teams focus their energy on the most profitable accounts. Can we schedule a brief call to discuss your goals?\n\nBest,\nChandrika\nInnova Solutions",
-        "word_count": 50,
-        "written_by": "llm",
-        "fallback_reason": null
+        "body": "Hi there,\n\nThank you for requesting a demo of our analytics product. We help sales and marketing teams see which customers and leads to prioritise by unifying CRM, transaction and engagement data. We believe it can help Active Company in Finance do the same. Would you be open to a 15-minute call this week?\n\nBest,\nChandrika\nInnova Solutions",
+        "word_count": 58,
+        "written_by": "template",
+        "fallback_reason": "LLM message rejected: contains banned phrase 'your goals'"
       }
     },
     {
@@ -177,17 +182,18 @@
       },
       "score": 9.2,
       "decision": "qualified",
-      "reasoning": "As a SaaS company with 2000 employees, it falls squarely into the mid-market range and operates within a primary target sector. Strongest: recency 10/10, industry 10/10. Weakest: size 8/10 (2000). Qualified (9.2/10): at or above the 8.0 qualified cut-off.",
+      "reasoning": "As a SaaS provider with 2,000 employees, this company matches the target size range and operates in a core sector. Strongest: recency 10/10, industry 10/10. Weakest: size 8/10 (2000). Qualified (9.2/10): at or above the 8.0 qualified cut-off.",
       "score_breakdown": "source 9/10 (Inbound demo request); size 8/10 (2000 employees); recency 10/10 (0 days); industry 10/10 (SaaS); weighted score 9.2/10",
       "confidence": "high",
       "industry_group": "tech",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": {
         "variant": "inbound_direct",
         "subject": "Thank you for requesting a demo of our analytics product",
-        "body": "Hi Test_HighValueMatch,\n\nThank you for requesting a demo of our analytics product. Growth at Perfect Fit Enterprise relies on knowing which prospects to target, which our platform achieves by merging CRM, transaction, and engagement streams into a single dashboard. Are you available for a short call to explore the details?\n\nBest,\nChandrika\nInnova Solutions",
-        "word_count": 54,
+        "body": "Hi there,\n\nThank you for requesting a demo of our analytics product. Our software integrates CRM, transaction, and engagement records to help Perfect Fit Enterprise sales and marketing teams focus on the most profitable prospects. Would you have time for a brief discussion later this week?\n\nBest,\nChandrika\nInnova Solutions",
+        "word_count": 50,
         "written_by": "llm",
         "fallback_reason": null
       }
@@ -208,25 +214,60 @@
       },
       "score": 8.5,
       "decision": "qualified",
-      "reasoning": "With 400 employees, the company fits the mid-market size criteria nicely while operating in the consulting sector. Strongest: size 10/10, recency 10/10. Weakest: source 7/10 (Sales call), industry 7/10 (Consulting). Qualified (8.5/10): at or above the 8.0 qualified cut-off.",
+      "reasoning": "With 400 employees, this consulting firm falls comfortably within the target mid-market size range. Strongest: size 10/10, recency 10/10. Weakest: source 7/10 (Sales call), industry 7/10 (Consulting). Qualified (8.5/10): at or above the 8.0 qualified cut-off.",
       "score_breakdown": "source 7/10 (Sales call); size 10/10 (400 employees); recency 10/10 (1 days); industry 7/10 (Consulting); weighted score 8.5/10",
       "confidence": "high",
       "industry_group": "real_estate_consulting",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": {
         "variant": "inbound_direct",
         "subject": "Following up on our call about our analytics product",
-        "body": "Hi Test_MissingName,\n\nThank you for speaking with our team about our analytics product. By pooling CRM, transaction, and engagement inputs together, consulting teams can quickly pinpoint which leads deserve immediate attention. Would a brief call work to discuss next steps?\n\nBest,\nChandrika\nInnova Solutions",
-        "word_count": 44,
-        "written_by": "llm",
-        "fallback_reason": null
+        "body": "Hi there,\n\nThank you for speaking with our team about our analytics product. We help sales and marketing teams see which customers and leads to prioritise by unifying CRM, transaction and engagement data. We believe it can help your team do the same. Would you be open to a 15-minute call this week?\n\nBest,\nChandrika\nInnova Solutions",
+        "word_count": 57,
+        "written_by": "template",
+        "fallback_reason": "basic message: no company name"
+      }
+    },
+    {
+      "rank": 6,
+      "name": "Test_UnknownIndustry",
+      "company": "Mysterious Startup",
+      "company_size": "15",
+      "industry": "Unknown Sector",
+      "source": "Referral",
+      "days_since_last_interaction": 1,
+      "factor_scores": {
+        "source": 10,
+        "size": 6,
+        "recency": 10,
+        "industry": 5
+      },
+      "score": 8.0,
+      "decision": "qualified",
+      "reasoning": "The unknown sector provides no clear industry alignment, despite having 15 employees. Strongest: source 10/10, recency 10/10. Weakest: industry 5/10 (Unknown Sector). Qualified (8.0/10): at or above the 8.0 qualified cut-off; note: industry 'Unknown Sector' could not be mapped.",
+      "score_breakdown": "source 10/10 (Referral); size 6/10 (15 employees); recency 10/10 (1 days); industry 5/10 (Unknown Sector); weighted score 8.0/10",
+      "confidence": "low",
+      "industry_group": null,
+      "flags": [
+        "industry 'Unknown Sector' could not be mapped"
+      ],
+      "llm_status": "ok",
+      "llm_error": null,
+      "message": {
+        "variant": "referral_warm",
+        "subject": "Introducing our analytics product to Mysterious Startup",
+        "body": "Hi there,\n\nYou were referred to us by our mutual connection, so I wanted to reach out and introduce our analytics product. We help sales and marketing teams see which customers and leads to prioritise by unifying CRM, transaction and engagement data. We believe it can help Mysterious Startup do the same. Would you be open to a 15-minute call this week?\n\nBest,\nChandrika\nInnova Solutions",
+        "word_count": 66,
+        "written_by": "template",
+        "fallback_reason": "basic message: industry not confirmed"
       }
     }
   ],
   "review_queue": [
     {
-      "rank": 6,
+      "rank": 7,
       "name": "Test_NoSourceInfo",
       "company": "Source Unknown Corp",
       "company_size": "300",
@@ -241,7 +282,7 @@
       },
       "score": 8.5,
       "decision": "review",
-      "reasoning": "Operating in retail with 300 employees, this lead matches both our ideal mid-market size and top industry. Strongest: size 10/10, recency 10/10, industry 10/10. Weakest: source 5/10 (Unknown Source). Review (8.5/10): unknown source 'Unknown Source'.",
+      "reasoning": "Retail is a top target industry, and 300 employees align well with mid-market company size. Strongest: size 10/10, recency 10/10, industry 10/10. Weakest: source 5/10 (Unknown Source). Review (8.5/10): unknown source 'Unknown Source'.",
       "score_breakdown": "source 5/10 (Unknown Source); size 10/10 (300 employees); recency 10/10 (2 days); industry 10/10 (Retail); weighted score 8.5/10",
       "confidence": "high",
       "industry_group": "retail",
@@ -249,10 +290,11 @@
         "unknown source 'Unknown Source'"
       ],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
-      "rank": 7,
+      "rank": 8,
       "name": "Test_MissingSize",
       "company": "Test Inc",
       "company_size": "NA",
@@ -267,7 +309,7 @@
       },
       "score": 8.4,
       "decision": "review",
-      "reasoning": "As a SaaS provider, Test Inc fits the target software sector, though its company size is unlisted. Strongest: recency 10/10, industry 10/10. Weakest: size 5/10 (NA). Review (8.4/10): missing size.",
+      "reasoning": "As a SaaS provider, Test Inc fits the software sector, though company size is unknown. Strongest: recency 10/10, industry 10/10. Weakest: size 5/10 (NA). Review (8.4/10): missing size.",
       "score_breakdown": "source 9/10 (Inbound demo request); size 5/10 (NA employees); recency 10/10 (0 days); industry 10/10 (SaaS); weighted score 8.4/10",
       "confidence": "high",
       "industry_group": "tech",
@@ -275,33 +317,7 @@
         "missing size"
       ],
       "llm_status": "ok",
-      "message": null
-    },
-    {
-      "rank": 8,
-      "name": "Test_UnknownIndustry",
-      "company": "Mysterious Startup",
-      "company_size": "15",
-      "industry": "Unknown Sector",
-      "source": "Referral",
-      "days_since_last_interaction": 1,
-      "factor_scores": {
-        "source": 10,
-        "size": 6,
-        "recency": 10,
-        "industry": 5
-      },
-      "score": 8.0,
-      "decision": "review",
-      "reasoning": "An unknown sector makes industry classification ambiguous, and its 15 employees are near the lower mid-market bound. Strongest: source 10/10, recency 10/10. Weakest: industry 5/10 (Unknown Sector). Review (8.0/10): industry 'Unknown Sector' could not be mapped; low LLM confidence.",
-      "score_breakdown": "source 10/10 (Referral); size 6/10 (15 employees); recency 10/10 (1 days); industry 5/10 (Unknown Sector); weighted score 8.0/10",
-      "confidence": "low",
-      "industry_group": null,
-      "flags": [
-        "industry 'Unknown Sector' could not be mapped",
-        "low LLM confidence"
-      ],
-      "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -320,40 +336,17 @@
       },
       "score": 7.9,
       "decision": "review",
-      "reasoning": "As a SaaS company, it fits the tech group, but its 2 employees fall far short of the mid-market size. Strongest: recency 10/10, industry 10/10. Weakest: size 3/10 (2). Review (7.9/10): below the 8.0 qualified cut-off.",
+      "reasoning": "SaaS matches our tech industry focus, but a team of two employees is well below the mid-market size. Strongest: recency 10/10, industry 10/10. Weakest: size 3/10 (2). Review (7.9/10): below the 8.0 qualified cut-off.",
       "score_breakdown": "source 9/10 (Inbound demo request); size 3/10 (2 employees); recency 10/10 (0 days); industry 10/10 (SaaS); weighted score 7.9/10",
       "confidence": "high",
       "industry_group": "tech",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
       "rank": 10,
-      "name": "Test_VeryLargeEnterprise",
-      "company": "Global Fortune 500 Corp",
-      "company_size": "50000",
-      "industry": "Enterprise Software",
-      "source": "Inbound demo request",
-      "days_since_last_interaction": 0,
-      "factor_scores": {
-        "source": 9,
-        "size": 2,
-        "recency": 10,
-        "industry": 10
-      },
-      "score": 7.7,
-      "decision": "review",
-      "reasoning": "Enterprise software aligns with our tech sector, but with 50,000 employees, it exceeds our mid-market focus. Strongest: recency 10/10, industry 10/10. Weakest: size 2/10 (50000). Review (7.7/10): below the 8.0 qualified cut-off.",
-      "score_breakdown": "source 9/10 (Inbound demo request); size 2/10 (50000 employees); recency 10/10 (0 days); industry 10/10 (Enterprise Software); weighted score 7.7/10",
-      "confidence": "high",
-      "industry_group": "tech",
-      "flags": [],
-      "llm_status": "ok",
-      "message": null
-    },
-    {
-      "rank": 11,
       "name": "Test_WeekOldInteraction",
       "company": "Week Old Corp",
       "company_size": "250",
@@ -368,12 +361,40 @@
       },
       "score": 7.7,
       "decision": "review",
-      "reasoning": "With 250 employees, it matches the mid-market size profile while belonging to the logistics sector. Strongest: size 10/10, recency 10/10. Weakest: source 5/10 (Webinar attendee). Review (7.7/10): below the 8.0 qualified cut-off.",
+      "reasoning": "With 250 employees, it meets the mid-market size criteria despite operating outside the core sectors. Strongest: size 10/10, recency 10/10. Weakest: source 5/10 (Webinar attendee). Review (7.7/10): below the 8.0 qualified cut-off.",
       "score_breakdown": "source 5/10 (Webinar attendee); size 10/10 (250 employees); recency 10/10 (7 days); industry 6/10 (Logistics); weighted score 7.7/10",
       "confidence": "high",
       "industry_group": "manufacturing",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
+      "message": null
+    },
+    {
+      "rank": 11,
+      "name": "Test_VeryLargeEnterprise",
+      "company": "Global Fortune 500 Corp",
+      "company_size": "50000",
+      "industry": "Enterprise Software",
+      "source": "Inbound demo request",
+      "days_since_last_interaction": 0,
+      "factor_scores": {
+        "source": 9,
+        "size": 2,
+        "recency": 10,
+        "industry": 9
+      },
+      "score": 7.5,
+      "decision": "review",
+      "reasoning": "Enterprise Software aligns with tech, but at 50,000 employees, this exceeds the mid-market target. Strongest: recency 10/10. Weakest: size 2/10 (50000). Review (7.5/10): below the 8.0 qualified cut-off; note: uncertain industry match to tech.",
+      "score_breakdown": "source 9/10 (Inbound demo request); size 2/10 (50000 employees); recency 10/10 (0 days); industry 9/10 (Enterprise Software); weighted score 7.5/10",
+      "confidence": "medium",
+      "industry_group": "tech",
+      "flags": [
+        "uncertain industry match to tech"
+      ],
+      "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -392,12 +413,13 @@
       },
       "score": 7.4,
       "decision": "review",
-      "reasoning": "A SaaS provider with 1500 employees fits comfortably within the mid-market size and core target industry. Strongest: recency 10/10, industry 10/10. Weakest: source 3/10 (Content download). Review (7.4/10): below the 8.0 qualified cut-off.",
+      "reasoning": "This SaaS provider employs 1,500 people, aligning well with the mid-market size and target industry criteria. Strongest: recency 10/10, industry 10/10. Weakest: source 3/10 (Content download). Review (7.4/10): below the 8.0 qualified cut-off.",
       "score_breakdown": "source 3/10 (Content download); size 8/10 (1500 employees); recency 10/10 (2 days); industry 10/10 (SaaS); weighted score 7.4/10",
       "confidence": "high",
       "industry_group": "tech",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -416,12 +438,13 @@
       },
       "score": 7.4,
       "decision": "review",
-      "reasoning": "The 3000-employee size fits the mid-market range, but the government sector is outside the primary target industries. Strongest: recency 10/10. Weakest: industry 4/10 (Government). Review (7.4/10): below the 8.0 qualified cut-off.",
+      "reasoning": "With 3,000 employees, it matches the mid-market size, though government is not a core target sector. Strongest: recency 10/10. Weakest: industry 4/10 (Government). Review (7.4/10): below the 8.0 qualified cut-off.",
       "score_breakdown": "source 7/10 (Sales call); size 8/10 (3000 employees); recency 10/10 (3 days); industry 4/10 (Government); weighted score 7.4/10",
       "confidence": "high",
       "industry_group": "government_legal_agri",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -440,7 +463,7 @@
       },
       "score": 7.2,
       "decision": "review",
-      "reasoning": "Operating in the SaaS industry aligns with the core target sectors, though company size data is missing. Strongest: recency 10/10, industry 10/10. Weakest: source 5/10, size 5/10 (NA). Review (7.2/10): missing source; missing size.",
+      "reasoning": "Operating in the SaaS sector is a strong fit, though the missing company size makes the mid-market qualification uncertain. Strongest: recency 10/10, industry 10/10. Weakest: source 5/10, size 5/10 (NA). Review (7.2/10): missing source; missing size.",
       "score_breakdown": "source 5/10 (missing); size 5/10 (NA employees); recency 10/10 (0 days); industry 10/10 (SaaS); weighted score 7.2/10",
       "confidence": "medium",
       "industry_group": "tech",
@@ -449,6 +472,7 @@
         "missing size"
       ],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -467,9 +491,9 @@
       },
       "score": 7.0,
       "decision": "review",
-      "reasoning": "Technology is broad and likely fits the tech group, and its 150 employees align well with mid-market sizing. Strongest: size 10/10. Weakest: source 5/10, recency 5/10. Review (7.0/10): missing source; missing date; uncertain industry match to tech.",
+      "reasoning": "Technology is broad and unlisted, though its 150 employees fit the mid-market workforce criteria. Strongest: size 10/10. Weakest: source 5/10, recency 5/10. Review (7.0/10): missing source; missing date; note: uncertain industry match to tech.",
       "score_breakdown": "source 5/10 (missing); size 10/10 (150 employees); recency 5/10 (unknown); industry 9/10 (Technology); weighted score 7.0/10",
-      "confidence": "medium",
+      "confidence": "low",
       "industry_group": "tech",
       "flags": [
         "missing source",
@@ -477,6 +501,7 @@
         "uncertain industry match to tech"
       ],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -495,12 +520,13 @@
       },
       "score": 6.5,
       "decision": "review",
-      "reasoning": "Although operating in the SaaS sector, its small team of 8 employees falls short of the ideal mid-market size. Strongest: source 10/10, industry 10/10. Weakest: size 3/10 (8), recency 3/10 (264 days). Review (6.5/10): below the 8.0 qualified cut-off.",
+      "reasoning": "While operating in the ideal SaaS sector, its small size of 8 employees falls short of mid-market criteria. Strongest: source 10/10, industry 10/10. Weakest: size 3/10 (8), recency 3/10 (264 days). Review (6.5/10): below the 8.0 qualified cut-off.",
       "score_breakdown": "source 10/10 (Referral); size 3/10 (8 employees); recency 3/10 (264 days); industry 10/10 (SaaS); weighted score 6.5/10",
       "confidence": "high",
       "industry_group": "tech",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -519,7 +545,7 @@
       },
       "score": 5.0,
       "decision": "review",
-      "reasoning": "The provided data lacks both company size and industry information, making it impossible to evaluate against ideal customer parameters. Review (5.0/10): missing source; missing size; missing date; missing industry; low LLM confidence.",
+      "reasoning": "The missing company size and industry data prevent proper qualification against ideal customer criteria. Review (5.0/10): missing source; missing size; missing date; note: missing industry.",
       "score_breakdown": "source 5/10 (NA); size 5/10 (NA employees); recency 5/10 (unknown); industry 5/10 (NA); weighted score 5.0/10",
       "confidence": "low",
       "industry_group": null,
@@ -527,10 +553,10 @@
         "missing source",
         "missing size",
         "missing date",
-        "missing industry",
-        "low LLM confidence"
+        "missing industry"
       ],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     }
   ],
@@ -551,12 +577,13 @@
       },
       "score": 6.0,
       "decision": "rejected",
-      "reasoning": "With 100 employees, this manufacturer fits the mid-market size, though manufacturing is outside our strongest verticals. Strongest: size 10/10. Weakest: recency 1/10 (584 days). Rejected (6.0/10): below the 6.5 review cut-off.",
+      "reasoning": "Manufacturing fits the industry profile and its 100 employees sit comfortably within the mid-market size range. Strongest: size 10/10. Weakest: recency 1/10 (584 days). Rejected (6.0/10): below the 6.5 review cut-off.",
       "score_breakdown": "source 7/10 (Sales call); size 10/10 (100 employees); recency 1/10 (584 days); industry 6/10 (Manufacturing); weighted score 6.0/10",
       "confidence": "high",
       "industry_group": "manufacturing",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -575,12 +602,13 @@
       },
       "score": 4.8,
       "decision": "rejected",
-      "reasoning": "Consulting aligns with our target group, but a company size of 1 is well below the mid-market range. Strongest: recency 10/10. Weakest: size 1/10 (1). Rejected (4.8/10): below the 6.5 review cut-off.",
+      "reasoning": "Consulting aligns with professional services, but a staff of one falls below the mid-market employee range. Strongest: recency 10/10. Weakest: size 1/10 (1). Rejected (4.8/10): below the 6.5 review cut-off.",
       "score_breakdown": "source 2/10 (LinkedIn outreach); size 1/10 (1 employees); recency 10/10 (0 days); industry 7/10 (Consulting); weighted score 4.8/10",
       "confidence": "high",
       "industry_group": "real_estate_consulting",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -599,12 +627,13 @@
       },
       "score": 4.7,
       "decision": "rejected",
-      "reasoning": "Operating in agriculture with only 5 employees places it well below the ideal mid-market size and outside core target industries. Strongest: recency 10/10. Weakest: source 2/10 (LinkedIn outreach). Rejected (4.7/10): below the 6.5 review cut-off.",
+      "reasoning": "Operating in agriculture with only 5 employees places it well below the ideal mid-market size threshold. Strongest: recency 10/10. Weakest: source 2/10 (LinkedIn outreach). Rejected (4.7/10): below the 6.5 review cut-off.",
       "score_breakdown": "source 2/10 (LinkedIn outreach); size 3/10 (5 employees); recency 10/10 (5 days); industry 4/10 (Agriculture); weighted score 4.7/10",
       "confidence": "high",
       "industry_group": "government_legal_agri",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     }
   ],
@@ -616,7 +645,7 @@
       "variant": "inbound_direct",
       "written_by": "llm",
       "subject": "Thank you for requesting a demo of our analytics product",
-      "message": "Hi Test_RecentEngagement,\n\nThank you for requesting a demo of our analytics product. At Hot Lead Corp, your sales and marketing groups can easily identify top accounts by bringing CRM, transaction, and engagement metrics into one view. Would you be open to a brief call this week to walk through how this works?\n\nBest,\nChandrika\nInnova Solutions"
+      "message": "Hi there,\n\nThank you for requesting a demo of our analytics product. Innova Solutions can help Hot Lead Corp sales and marketing teams see which accounts to prioritize by bringing CRM, transaction, and engagement data into one view. Would you be open to a brief call this week to review the setup?\n\nBest,\nChandrika\nInnova Solutions"
     },
     {
       "rank": 2,
@@ -625,16 +654,16 @@
       "variant": "inbound_direct",
       "written_by": "llm",
       "subject": "Thank you for requesting a demo of our analytics product",
-      "message": "Hi Test_SMBAverage,\n\nThank you for requesting a demo of our analytics product. Retail teams at Average SMB Co often struggle to spot the best buyers, but combining your CRM, transaction, and engagement records solves this by highlighting high-value targets. Do you have time for a short call to review the platform?\n\nBest,\nChandrika\nInnova Solutions"
+      "message": "Hi there,\n\nThank you for requesting a demo of our analytics product. Our platform combines CRM, transaction, and engagement data so Average SMB Co sales and marketing teams can easily identify their highest-value shoppers. Are you available for a quick conversation tomorrow?\n\nBest,\nChandrika\nInnova Solutions"
     },
     {
       "rank": 3,
       "company": "Active Company",
       "contact": "Test_MultipleInteractions",
       "variant": "inbound_direct",
-      "written_by": "llm",
+      "written_by": "template",
       "subject": "Thank you for requesting a demo of our analytics product",
-      "message": "Hi Test_MultipleInteractions,\n\nThank you for requesting a demo of our analytics product. For a finance organization like Active Company, connecting CRM, transaction, and engagement data helps commercial teams focus their energy on the most profitable accounts. Can we schedule a brief call to discuss your goals?\n\nBest,\nChandrika\nInnova Solutions"
+      "message": "Hi there,\n\nThank you for requesting a demo of our analytics product. We help sales and marketing teams see which customers and leads to prioritise by unifying CRM, transaction and engagement data. We believe it can help Active Company in Finance do the same. Would you be open to a 15-minute call this week?\n\nBest,\nChandrika\nInnova Solutions"
     },
     {
       "rank": 4,
@@ -643,16 +672,16 @@
       "variant": "inbound_direct",
       "written_by": "llm",
       "subject": "Thank you for requesting a demo of our analytics product",
-      "message": "Hi Test_HighValueMatch,\n\nThank you for requesting a demo of our analytics product. Growth at Perfect Fit Enterprise relies on knowing which prospects to target, which our platform achieves by merging CRM, transaction, and engagement streams into a single dashboard. Are you available for a short call to explore the details?\n\nBest,\nChandrika\nInnova Solutions"
+      "message": "Hi there,\n\nThank you for requesting a demo of our analytics product. Our software integrates CRM, transaction, and engagement records to help Perfect Fit Enterprise sales and marketing teams focus on the most profitable prospects. Would you have time for a brief discussion later this week?\n\nBest,\nChandrika\nInnova Solutions"
     },
     {
-      "rank": 5,
-      "company": "",
-      "contact": "Test_MissingName",
-      "variant": "inbound_direct",
-      "written_by": "llm",
-      "subject": "Following up on our call about our analytics product",
-      "message": "Hi Test_MissingName,\n\nThank you for speaking with our team about our analytics product. By pooling CRM, transaction, and engagement inputs together, consulting teams can quickly pinpoint which leads deserve immediate attention. Would a brief call work to discuss next steps?\n\nBest,\nChandrika\nInnova Solutions"
+      "rank": 6,
+      "company": "Mysterious Startup",
+      "contact": "Test_UnknownIndustry",
+      "variant": "referral_warm",
+      "written_by": "template",
+      "subject": "Introducing our analytics product to Mysterious Startup",
+      "message": "Hi there,\n\nYou were referred to us by our mutual connection, so I wanted to reach out and introduce our analytics product. We help sales and marketing teams see which customers and leads to prioritise by unifying CRM, transaction and engagement data. We believe it can help Mysterious Startup do the same. Would you be open to a 15-minute call this week?\n\nBest,\nChandrika\nInnova Solutions"
     }
   ],
   "leads": [
@@ -672,16 +701,17 @@
       },
       "score": 9.7,
       "decision": "qualified",
-      "reasoning": "With 200 employees and a SaaS focus, this company matches both our ideal mid-market size and core tech sector. Strongest: size 10/10, recency 10/10, industry 10/10. Weakest: source 9/10 (Inbound demo request). Qualified (9.7/10): at or above the 8.0 qualified cut-off.",
+      "reasoning": "Operating in SaaS with 200 employees, this company matches both our ideal industry and mid-market size targets. Strongest: size 10/10, recency 10/10, industry 10/10. Weakest: source 9/10 (Inbound demo request). Qualified (9.7/10): at or above the 8.0 qualified cut-off.",
       "score_breakdown": "source 9/10 (Inbound demo request); size 10/10 (200 employees); recency 10/10 (0 days); industry 10/10 (SaaS); weighted score 9.7/10",
       "confidence": "high",
       "industry_group": "tech",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": {
         "variant": "inbound_direct",
         "subject": "Thank you for requesting a demo of our analytics product",
-        "body": "Hi Test_RecentEngagement,\n\nThank you for requesting a demo of our analytics product. At Hot Lead Corp, your sales and marketing groups can easily identify top accounts by bringing CRM, transaction, and engagement metrics into one view. Would you be open to a brief call this week to walk through how this works?\n\nBest,\nChandrika\nInnova Solutions",
+        "body": "Hi there,\n\nThank you for requesting a demo of our analytics product. Innova Solutions can help Hot Lead Corp sales and marketing teams see which accounts to prioritize by bringing CRM, transaction, and engagement data into one view. Would you be open to a brief call this week to review the setup?\n\nBest,\nChandrika\nInnova Solutions",
         "word_count": 56,
         "written_by": "llm",
         "fallback_reason": null
@@ -703,17 +733,18 @@
       },
       "score": 9.7,
       "decision": "qualified",
-      "reasoning": "With 120 employees in the retail sector, this company matches both the mid-market size and core industry profile. Strongest: size 10/10, recency 10/10, industry 10/10. Weakest: source 9/10 (Inbound demo request). Qualified (9.7/10): at or above the 8.0 qualified cut-off.",
+      "reasoning": "As a retail company with 120 employees, it fits both the ideal industry and mid-market size profile. Strongest: size 10/10, recency 10/10, industry 10/10. Weakest: source 9/10 (Inbound demo request). Qualified (9.7/10): at or above the 8.0 qualified cut-off.",
       "score_breakdown": "source 9/10 (Inbound demo request); size 10/10 (120 employees); recency 10/10 (1 days); industry 10/10 (Retail); weighted score 9.7/10",
       "confidence": "high",
       "industry_group": "retail",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": {
         "variant": "inbound_direct",
         "subject": "Thank you for requesting a demo of our analytics product",
-        "body": "Hi Test_SMBAverage,\n\nThank you for requesting a demo of our analytics product. Retail teams at Average SMB Co often struggle to spot the best buyers, but combining your CRM, transaction, and engagement records solves this by highlighting high-value targets. Do you have time for a short call to review the platform?\n\nBest,\nChandrika\nInnova Solutions",
-        "word_count": 55,
+        "body": "Hi there,\n\nThank you for requesting a demo of our analytics product. Our platform combines CRM, transaction, and engagement data so Average SMB Co sales and marketing teams can easily identify their highest-value shoppers. Are you available for a quick conversation tomorrow?\n\nBest,\nChandrika\nInnova Solutions",
+        "word_count": 46,
         "written_by": "llm",
         "fallback_reason": null
       }
@@ -734,19 +765,20 @@
       },
       "score": 9.5,
       "decision": "qualified",
-      "reasoning": "With 500 employees and a finance focus, this company hits our ideal mid-market size and strong vertical. Strongest: size 10/10, recency 10/10. Weakest: source 9/10 (Inbound demo request), industry 9/10 (Finance). Qualified (9.5/10): at or above the 8.0 qualified cut-off.",
+      "reasoning": "Finance is a target sector, and its 500 employees fit the ideal mid-market company size range. Strongest: size 10/10, recency 10/10. Weakest: source 9/10 (Inbound demo request), industry 9/10 (Finance). Qualified (9.5/10): at or above the 8.0 qualified cut-off.",
       "score_breakdown": "source 9/10 (Inbound demo request); size 10/10 (500 employees); recency 10/10 (0 days); industry 9/10 (Finance); weighted score 9.5/10",
       "confidence": "high",
       "industry_group": "finance",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": {
         "variant": "inbound_direct",
         "subject": "Thank you for requesting a demo of our analytics product",
-        "body": "Hi Test_MultipleInteractions,\n\nThank you for requesting a demo of our analytics product. For a finance organization like Active Company, connecting CRM, transaction, and engagement data helps commercial teams focus their energy on the most profitable accounts. Can we schedule a brief call to discuss your goals?\n\nBest,\nChandrika\nInnova Solutions",
-        "word_count": 50,
-        "written_by": "llm",
-        "fallback_reason": null
+        "body": "Hi there,\n\nThank you for requesting a demo of our analytics product. We help sales and marketing teams see which customers and leads to prioritise by unifying CRM, transaction and engagement data. We believe it can help Active Company in Finance do the same. Would you be open to a 15-minute call this week?\n\nBest,\nChandrika\nInnova Solutions",
+        "word_count": 58,
+        "written_by": "template",
+        "fallback_reason": "LLM message rejected: contains banned phrase 'your goals'"
       }
     },
     {
@@ -765,17 +797,18 @@
       },
       "score": 9.2,
       "decision": "qualified",
-      "reasoning": "As a SaaS company with 2000 employees, it falls squarely into the mid-market range and operates within a primary target sector. Strongest: recency 10/10, industry 10/10. Weakest: size 8/10 (2000). Qualified (9.2/10): at or above the 8.0 qualified cut-off.",
+      "reasoning": "As a SaaS provider with 2,000 employees, this company matches the target size range and operates in a core sector. Strongest: recency 10/10, industry 10/10. Weakest: size 8/10 (2000). Qualified (9.2/10): at or above the 8.0 qualified cut-off.",
       "score_breakdown": "source 9/10 (Inbound demo request); size 8/10 (2000 employees); recency 10/10 (0 days); industry 10/10 (SaaS); weighted score 9.2/10",
       "confidence": "high",
       "industry_group": "tech",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": {
         "variant": "inbound_direct",
         "subject": "Thank you for requesting a demo of our analytics product",
-        "body": "Hi Test_HighValueMatch,\n\nThank you for requesting a demo of our analytics product. Growth at Perfect Fit Enterprise relies on knowing which prospects to target, which our platform achieves by merging CRM, transaction, and engagement streams into a single dashboard. Are you available for a short call to explore the details?\n\nBest,\nChandrika\nInnova Solutions",
-        "word_count": 54,
+        "body": "Hi there,\n\nThank you for requesting a demo of our analytics product. Our software integrates CRM, transaction, and engagement records to help Perfect Fit Enterprise sales and marketing teams focus on the most profitable prospects. Would you have time for a brief discussion later this week?\n\nBest,\nChandrika\nInnova Solutions",
+        "word_count": 50,
         "written_by": "llm",
         "fallback_reason": null
       }
@@ -796,23 +829,58 @@
       },
       "score": 8.5,
       "decision": "qualified",
-      "reasoning": "With 400 employees, the company fits the mid-market size criteria nicely while operating in the consulting sector. Strongest: size 10/10, recency 10/10. Weakest: source 7/10 (Sales call), industry 7/10 (Consulting). Qualified (8.5/10): at or above the 8.0 qualified cut-off.",
+      "reasoning": "With 400 employees, this consulting firm falls comfortably within the target mid-market size range. Strongest: size 10/10, recency 10/10. Weakest: source 7/10 (Sales call), industry 7/10 (Consulting). Qualified (8.5/10): at or above the 8.0 qualified cut-off.",
       "score_breakdown": "source 7/10 (Sales call); size 10/10 (400 employees); recency 10/10 (1 days); industry 7/10 (Consulting); weighted score 8.5/10",
       "confidence": "high",
       "industry_group": "real_estate_consulting",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": {
         "variant": "inbound_direct",
         "subject": "Following up on our call about our analytics product",
-        "body": "Hi Test_MissingName,\n\nThank you for speaking with our team about our analytics product. By pooling CRM, transaction, and engagement inputs together, consulting teams can quickly pinpoint which leads deserve immediate attention. Would a brief call work to discuss next steps?\n\nBest,\nChandrika\nInnova Solutions",
-        "word_count": 44,
-        "written_by": "llm",
-        "fallback_reason": null
+        "body": "Hi there,\n\nThank you for speaking with our team about our analytics product. We help sales and marketing teams see which customers and leads to prioritise by unifying CRM, transaction and engagement data. We believe it can help your team do the same. Would you be open to a 15-minute call this week?\n\nBest,\nChandrika\nInnova Solutions",
+        "word_count": 57,
+        "written_by": "template",
+        "fallback_reason": "basic message: no company name"
       }
     },
     {
       "rank": 6,
+      "name": "Test_UnknownIndustry",
+      "company": "Mysterious Startup",
+      "company_size": "15",
+      "industry": "Unknown Sector",
+      "source": "Referral",
+      "days_since_last_interaction": 1,
+      "factor_scores": {
+        "source": 10,
+        "size": 6,
+        "recency": 10,
+        "industry": 5
+      },
+      "score": 8.0,
+      "decision": "qualified",
+      "reasoning": "The unknown sector provides no clear industry alignment, despite having 15 employees. Strongest: source 10/10, recency 10/10. Weakest: industry 5/10 (Unknown Sector). Qualified (8.0/10): at or above the 8.0 qualified cut-off; note: industry 'Unknown Sector' could not be mapped.",
+      "score_breakdown": "source 10/10 (Referral); size 6/10 (15 employees); recency 10/10 (1 days); industry 5/10 (Unknown Sector); weighted score 8.0/10",
+      "confidence": "low",
+      "industry_group": null,
+      "flags": [
+        "industry 'Unknown Sector' could not be mapped"
+      ],
+      "llm_status": "ok",
+      "llm_error": null,
+      "message": {
+        "variant": "referral_warm",
+        "subject": "Introducing our analytics product to Mysterious Startup",
+        "body": "Hi there,\n\nYou were referred to us by our mutual connection, so I wanted to reach out and introduce our analytics product. We help sales and marketing teams see which customers and leads to prioritise by unifying CRM, transaction and engagement data. We believe it can help Mysterious Startup do the same. Would you be open to a 15-minute call this week?\n\nBest,\nChandrika\nInnova Solutions",
+        "word_count": 66,
+        "written_by": "template",
+        "fallback_reason": "basic message: industry not confirmed"
+      }
+    },
+    {
+      "rank": 7,
       "name": "Test_NoSourceInfo",
       "company": "Source Unknown Corp",
       "company_size": "300",
@@ -827,7 +895,7 @@
       },
       "score": 8.5,
       "decision": "review",
-      "reasoning": "Operating in retail with 300 employees, this lead matches both our ideal mid-market size and top industry. Strongest: size 10/10, recency 10/10, industry 10/10. Weakest: source 5/10 (Unknown Source). Review (8.5/10): unknown source 'Unknown Source'.",
+      "reasoning": "Retail is a top target industry, and 300 employees align well with mid-market company size. Strongest: size 10/10, recency 10/10, industry 10/10. Weakest: source 5/10 (Unknown Source). Review (8.5/10): unknown source 'Unknown Source'.",
       "score_breakdown": "source 5/10 (Unknown Source); size 10/10 (300 employees); recency 10/10 (2 days); industry 10/10 (Retail); weighted score 8.5/10",
       "confidence": "high",
       "industry_group": "retail",
@@ -835,10 +903,11 @@
         "unknown source 'Unknown Source'"
       ],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
-      "rank": 7,
+      "rank": 8,
       "name": "Test_MissingSize",
       "company": "Test Inc",
       "company_size": "NA",
@@ -853,7 +922,7 @@
       },
       "score": 8.4,
       "decision": "review",
-      "reasoning": "As a SaaS provider, Test Inc fits the target software sector, though its company size is unlisted. Strongest: recency 10/10, industry 10/10. Weakest: size 5/10 (NA). Review (8.4/10): missing size.",
+      "reasoning": "As a SaaS provider, Test Inc fits the software sector, though company size is unknown. Strongest: recency 10/10, industry 10/10. Weakest: size 5/10 (NA). Review (8.4/10): missing size.",
       "score_breakdown": "source 9/10 (Inbound demo request); size 5/10 (NA employees); recency 10/10 (0 days); industry 10/10 (SaaS); weighted score 8.4/10",
       "confidence": "high",
       "industry_group": "tech",
@@ -861,33 +930,7 @@
         "missing size"
       ],
       "llm_status": "ok",
-      "message": null
-    },
-    {
-      "rank": 8,
-      "name": "Test_UnknownIndustry",
-      "company": "Mysterious Startup",
-      "company_size": "15",
-      "industry": "Unknown Sector",
-      "source": "Referral",
-      "days_since_last_interaction": 1,
-      "factor_scores": {
-        "source": 10,
-        "size": 6,
-        "recency": 10,
-        "industry": 5
-      },
-      "score": 8.0,
-      "decision": "review",
-      "reasoning": "An unknown sector makes industry classification ambiguous, and its 15 employees are near the lower mid-market bound. Strongest: source 10/10, recency 10/10. Weakest: industry 5/10 (Unknown Sector). Review (8.0/10): industry 'Unknown Sector' could not be mapped; low LLM confidence.",
-      "score_breakdown": "source 10/10 (Referral); size 6/10 (15 employees); recency 10/10 (1 days); industry 5/10 (Unknown Sector); weighted score 8.0/10",
-      "confidence": "low",
-      "industry_group": null,
-      "flags": [
-        "industry 'Unknown Sector' could not be mapped",
-        "low LLM confidence"
-      ],
-      "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -906,40 +949,17 @@
       },
       "score": 7.9,
       "decision": "review",
-      "reasoning": "As a SaaS company, it fits the tech group, but its 2 employees fall far short of the mid-market size. Strongest: recency 10/10, industry 10/10. Weakest: size 3/10 (2). Review (7.9/10): below the 8.0 qualified cut-off.",
+      "reasoning": "SaaS matches our tech industry focus, but a team of two employees is well below the mid-market size. Strongest: recency 10/10, industry 10/10. Weakest: size 3/10 (2). Review (7.9/10): below the 8.0 qualified cut-off.",
       "score_breakdown": "source 9/10 (Inbound demo request); size 3/10 (2 employees); recency 10/10 (0 days); industry 10/10 (SaaS); weighted score 7.9/10",
       "confidence": "high",
       "industry_group": "tech",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
       "rank": 10,
-      "name": "Test_VeryLargeEnterprise",
-      "company": "Global Fortune 500 Corp",
-      "company_size": "50000",
-      "industry": "Enterprise Software",
-      "source": "Inbound demo request",
-      "days_since_last_interaction": 0,
-      "factor_scores": {
-        "source": 9,
-        "size": 2,
-        "recency": 10,
-        "industry": 10
-      },
-      "score": 7.7,
-      "decision": "review",
-      "reasoning": "Enterprise software aligns with our tech sector, but with 50,000 employees, it exceeds our mid-market focus. Strongest: recency 10/10, industry 10/10. Weakest: size 2/10 (50000). Review (7.7/10): below the 8.0 qualified cut-off.",
-      "score_breakdown": "source 9/10 (Inbound demo request); size 2/10 (50000 employees); recency 10/10 (0 days); industry 10/10 (Enterprise Software); weighted score 7.7/10",
-      "confidence": "high",
-      "industry_group": "tech",
-      "flags": [],
-      "llm_status": "ok",
-      "message": null
-    },
-    {
-      "rank": 11,
       "name": "Test_WeekOldInteraction",
       "company": "Week Old Corp",
       "company_size": "250",
@@ -954,12 +974,40 @@
       },
       "score": 7.7,
       "decision": "review",
-      "reasoning": "With 250 employees, it matches the mid-market size profile while belonging to the logistics sector. Strongest: size 10/10, recency 10/10. Weakest: source 5/10 (Webinar attendee). Review (7.7/10): below the 8.0 qualified cut-off.",
+      "reasoning": "With 250 employees, it meets the mid-market size criteria despite operating outside the core sectors. Strongest: size 10/10, recency 10/10. Weakest: source 5/10 (Webinar attendee). Review (7.7/10): below the 8.0 qualified cut-off.",
       "score_breakdown": "source 5/10 (Webinar attendee); size 10/10 (250 employees); recency 10/10 (7 days); industry 6/10 (Logistics); weighted score 7.7/10",
       "confidence": "high",
       "industry_group": "manufacturing",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
+      "message": null
+    },
+    {
+      "rank": 11,
+      "name": "Test_VeryLargeEnterprise",
+      "company": "Global Fortune 500 Corp",
+      "company_size": "50000",
+      "industry": "Enterprise Software",
+      "source": "Inbound demo request",
+      "days_since_last_interaction": 0,
+      "factor_scores": {
+        "source": 9,
+        "size": 2,
+        "recency": 10,
+        "industry": 9
+      },
+      "score": 7.5,
+      "decision": "review",
+      "reasoning": "Enterprise Software aligns with tech, but at 50,000 employees, this exceeds the mid-market target. Strongest: recency 10/10. Weakest: size 2/10 (50000). Review (7.5/10): below the 8.0 qualified cut-off; note: uncertain industry match to tech.",
+      "score_breakdown": "source 9/10 (Inbound demo request); size 2/10 (50000 employees); recency 10/10 (0 days); industry 9/10 (Enterprise Software); weighted score 7.5/10",
+      "confidence": "medium",
+      "industry_group": "tech",
+      "flags": [
+        "uncertain industry match to tech"
+      ],
+      "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -978,12 +1026,13 @@
       },
       "score": 7.4,
       "decision": "review",
-      "reasoning": "A SaaS provider with 1500 employees fits comfortably within the mid-market size and core target industry. Strongest: recency 10/10, industry 10/10. Weakest: source 3/10 (Content download). Review (7.4/10): below the 8.0 qualified cut-off.",
+      "reasoning": "This SaaS provider employs 1,500 people, aligning well with the mid-market size and target industry criteria. Strongest: recency 10/10, industry 10/10. Weakest: source 3/10 (Content download). Review (7.4/10): below the 8.0 qualified cut-off.",
       "score_breakdown": "source 3/10 (Content download); size 8/10 (1500 employees); recency 10/10 (2 days); industry 10/10 (SaaS); weighted score 7.4/10",
       "confidence": "high",
       "industry_group": "tech",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -1002,12 +1051,13 @@
       },
       "score": 7.4,
       "decision": "review",
-      "reasoning": "The 3000-employee size fits the mid-market range, but the government sector is outside the primary target industries. Strongest: recency 10/10. Weakest: industry 4/10 (Government). Review (7.4/10): below the 8.0 qualified cut-off.",
+      "reasoning": "With 3,000 employees, it matches the mid-market size, though government is not a core target sector. Strongest: recency 10/10. Weakest: industry 4/10 (Government). Review (7.4/10): below the 8.0 qualified cut-off.",
       "score_breakdown": "source 7/10 (Sales call); size 8/10 (3000 employees); recency 10/10 (3 days); industry 4/10 (Government); weighted score 7.4/10",
       "confidence": "high",
       "industry_group": "government_legal_agri",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -1026,7 +1076,7 @@
       },
       "score": 7.2,
       "decision": "review",
-      "reasoning": "Operating in the SaaS industry aligns with the core target sectors, though company size data is missing. Strongest: recency 10/10, industry 10/10. Weakest: source 5/10, size 5/10 (NA). Review (7.2/10): missing source; missing size.",
+      "reasoning": "Operating in the SaaS sector is a strong fit, though the missing company size makes the mid-market qualification uncertain. Strongest: recency 10/10, industry 10/10. Weakest: source 5/10, size 5/10 (NA). Review (7.2/10): missing source; missing size.",
       "score_breakdown": "source 5/10 (missing); size 5/10 (NA employees); recency 10/10 (0 days); industry 10/10 (SaaS); weighted score 7.2/10",
       "confidence": "medium",
       "industry_group": "tech",
@@ -1035,6 +1085,7 @@
         "missing size"
       ],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -1053,9 +1104,9 @@
       },
       "score": 7.0,
       "decision": "review",
-      "reasoning": "Technology is broad and likely fits the tech group, and its 150 employees align well with mid-market sizing. Strongest: size 10/10. Weakest: source 5/10, recency 5/10. Review (7.0/10): missing source; missing date; uncertain industry match to tech.",
+      "reasoning": "Technology is broad and unlisted, though its 150 employees fit the mid-market workforce criteria. Strongest: size 10/10. Weakest: source 5/10, recency 5/10. Review (7.0/10): missing source; missing date; note: uncertain industry match to tech.",
       "score_breakdown": "source 5/10 (missing); size 10/10 (150 employees); recency 5/10 (unknown); industry 9/10 (Technology); weighted score 7.0/10",
-      "confidence": "medium",
+      "confidence": "low",
       "industry_group": "tech",
       "flags": [
         "missing source",
@@ -1063,6 +1114,7 @@
         "uncertain industry match to tech"
       ],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -1081,12 +1133,13 @@
       },
       "score": 6.5,
       "decision": "review",
-      "reasoning": "Although operating in the SaaS sector, its small team of 8 employees falls short of the ideal mid-market size. Strongest: source 10/10, industry 10/10. Weakest: size 3/10 (8), recency 3/10 (264 days). Review (6.5/10): below the 8.0 qualified cut-off.",
+      "reasoning": "While operating in the ideal SaaS sector, its small size of 8 employees falls short of mid-market criteria. Strongest: source 10/10, industry 10/10. Weakest: size 3/10 (8), recency 3/10 (264 days). Review (6.5/10): below the 8.0 qualified cut-off.",
       "score_breakdown": "source 10/10 (Referral); size 3/10 (8 employees); recency 3/10 (264 days); industry 10/10 (SaaS); weighted score 6.5/10",
       "confidence": "high",
       "industry_group": "tech",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -1105,7 +1158,7 @@
       },
       "score": 5.0,
       "decision": "review",
-      "reasoning": "The provided data lacks both company size and industry information, making it impossible to evaluate against ideal customer parameters. Review (5.0/10): missing source; missing size; missing date; missing industry; low LLM confidence.",
+      "reasoning": "The missing company size and industry data prevent proper qualification against ideal customer criteria. Review (5.0/10): missing source; missing size; missing date; note: missing industry.",
       "score_breakdown": "source 5/10 (NA); size 5/10 (NA employees); recency 5/10 (unknown); industry 5/10 (NA); weighted score 5.0/10",
       "confidence": "low",
       "industry_group": null,
@@ -1113,10 +1166,10 @@
         "missing source",
         "missing size",
         "missing date",
-        "missing industry",
-        "low LLM confidence"
+        "missing industry"
       ],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -1135,12 +1188,13 @@
       },
       "score": 6.0,
       "decision": "rejected",
-      "reasoning": "With 100 employees, this manufacturer fits the mid-market size, though manufacturing is outside our strongest verticals. Strongest: size 10/10. Weakest: recency 1/10 (584 days). Rejected (6.0/10): below the 6.5 review cut-off.",
+      "reasoning": "Manufacturing fits the industry profile and its 100 employees sit comfortably within the mid-market size range. Strongest: size 10/10. Weakest: recency 1/10 (584 days). Rejected (6.0/10): below the 6.5 review cut-off.",
       "score_breakdown": "source 7/10 (Sales call); size 10/10 (100 employees); recency 1/10 (584 days); industry 6/10 (Manufacturing); weighted score 6.0/10",
       "confidence": "high",
       "industry_group": "manufacturing",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -1159,12 +1213,13 @@
       },
       "score": 4.8,
       "decision": "rejected",
-      "reasoning": "Consulting aligns with our target group, but a company size of 1 is well below the mid-market range. Strongest: recency 10/10. Weakest: size 1/10 (1). Rejected (4.8/10): below the 6.5 review cut-off.",
+      "reasoning": "Consulting aligns with professional services, but a staff of one falls below the mid-market employee range. Strongest: recency 10/10. Weakest: size 1/10 (1). Rejected (4.8/10): below the 6.5 review cut-off.",
       "score_breakdown": "source 2/10 (LinkedIn outreach); size 1/10 (1 employees); recency 10/10 (0 days); industry 7/10 (Consulting); weighted score 4.8/10",
       "confidence": "high",
       "industry_group": "real_estate_consulting",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     },
     {
@@ -1183,12 +1238,13 @@
       },
       "score": 4.7,
       "decision": "rejected",
-      "reasoning": "Operating in agriculture with only 5 employees places it well below the ideal mid-market size and outside core target industries. Strongest: recency 10/10. Weakest: source 2/10 (LinkedIn outreach). Rejected (4.7/10): below the 6.5 review cut-off.",
+      "reasoning": "Operating in agriculture with only 5 employees places it well below the ideal mid-market size threshold. Strongest: recency 10/10. Weakest: source 2/10 (LinkedIn outreach). Rejected (4.7/10): below the 6.5 review cut-off.",
       "score_breakdown": "source 2/10 (LinkedIn outreach); size 3/10 (5 employees); recency 10/10 (5 days); industry 4/10 (Agriculture); weighted score 4.7/10",
       "confidence": "high",
       "industry_group": "government_legal_agri",
       "flags": [],
       "llm_status": "ok",
+      "llm_error": null,
       "message": null
     }
   ]

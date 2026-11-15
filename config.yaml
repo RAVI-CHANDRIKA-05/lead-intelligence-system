@@ -67,7 +67,7 @@ missing_values: ["", "NA", "N/A", "NULL", "NONE", "NAN", "UNKNOWN", "-"]
 industry_groups:
   tech:
     score: 10
-    members: [SaaS, Software, Analytics, Cybersecurity, EdTech, FinTech, AI/ML, Cloud, IT Services]
+    members: [SaaS, Software, Analytics, Cybersecurity, AI/ML, Cloud, IT Services]
   retail:
     score: 10
     members: [Retail, E-commerce, Consumer Goods]
@@ -107,11 +107,11 @@ unlisted_industry:
   uncertain_match:           # plausible group, but not obvious
     penalty: 1               # subtract this from the matched group's score
     confidence: low
-    flag_for_review: true
+    flag_for_review: false   # note only: the score still decides; a basic message is sent
   no_match:                  # nothing fits
     score: 5                 # neutral
     confidence: low
-    flag_for_review: true
+    flag_for_review: false   # note only: the score still decides; a basic message is sent
   record_mapping_in_reasoning: true
 
 # Decision thresholds on the final 1-10 score.
@@ -144,6 +144,18 @@ messages:
     prioritise by unifying CRM, transaction and engagement data.
   product_link: ""           # optional: your product page URL. Used in LinkedIn (outreach_soft) messages only.
   link_sentence: "You can find an overview here: {link}"
+  banned_phrases:            # if the LLM text contains any of these, the template is used instead
+    - struggle
+    - challenge
+    - pain point
+    - frustrat
+    - workflow
+    - your goals
+    - your needs
+    - often
+    - typically
+    - tend to
+    - solve
   default_variant: inbound_direct
   variant_by_source:         # which message style each lead source gets
     "Referral": referral_warm
@@ -178,6 +190,7 @@ messages:
     "Content download": "Thank you for your interest in our {product}"
     "LinkedIn outreach": "A quick introduction to our {product} for {company}"
   default_subject: "Our {product} for {company}"
+  subject_no_company: "Introducing our {product}"   # used when the lead has no company name
 
 # LLM call settings (Gemini API via Google AI Studio).
 # The API key is read from the LLM_API_KEY environment variable or a .env file.
